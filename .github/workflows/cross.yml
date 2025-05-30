@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        shell: zsh --pipefail -fex {0}
+        shell: ${{env.default_ci_shell}}
     env:
       CARGO_TARGET_DIR: /tmp/rs
 
