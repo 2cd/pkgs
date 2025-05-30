@@ -1,0 +1,31 @@
+# black list
+/*
+target
+tmp
+_tmp.*
+_tmp_*
+
+.directory
+.thumbnails*
+.DS_Store
+desktop.ini
+Thumbs.db
+Thumbs.db:encryptable
+
+!/ci
+!/.git*
+# !/src
+# !/build.rs
+# !/.rustfmt.toml
+# !/rust-toolchain.toml
+# !/.cargo
+# !/Cargo.toml
+# !/Cargo.lock
+# !/License
+# !/assets
+# !/docs
+# !/tests
+# !/examples
+# !/locales
+# !/crates
+# !/Readme*.md

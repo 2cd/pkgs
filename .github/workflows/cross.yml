@@ -1,0 +1,93 @@
+name: build rs-crate (cross)
+# auto-task.start-build-time = ?
+
+on:
+  # schedule:
+  #   - cron: '30 20 20 */2 *'
+  push:
+    paths:
+      - .github/workflows/cross.yml
+      - ci/cross.dockerfile
+
+env:
+  default_ci_shell: ruby glossa/ci/preload.rb {0}
+  RUBYOPT: "--disable=gems"
+  cargo_build_profile: thin
+  ghcr_repo: 'ghcr.io/2cd/pkgs'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: zsh --pipefail -fex {0}
+    env:
+      CARGO_TARGET_DIR: /tmp/rs
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          repository: cross-rs/cross
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 2moe/glossa
+          path: glossa
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            ${{env.CARGO_TARGET_DIR}}
+          key: ${{ runner.os }}-cargo-cross
+
+      - name: add cargo profile
+        run: |
+          File.open('Cargo.toml', 'a') do
+            _1.puts <<~'TOML'
+              [profile.${{env.cargo_build_profile}}]
+              inherits = "release"
+              panic = "abort"
+              opt-level = 3
+              strip = true
+              lto = "thin"
+            TOML
+          end
+
+      - name: cargo build
+        run: |
+          pp `cargo -Vv`
+          %w[cargo b --profile ${{env.cargo_build_profile}}]
+            .then(&run)
+
+      - uses: actions/checkout@v4
+        with:
+          repository: 2cd/pkgs
+          path: pkgs
+
+      - name: tree
+        run: "%w[tree -L 2].then(&run)"
+
+      - name: build & push docker image
+        run: |
+          require_ci 'docker'
+          {
+            preset: nil,
+            create_manifest: false,
+            os: 'linux',
+            arch: 'x64',
+            tag: 'cross-x64',
+            file: 'pkgs/ci/cross.dockerfile',
+            pkg_name: 'cross',
+            suffix: '',
+          }.then { build_and_push_zstd_docker_image **_1 }
