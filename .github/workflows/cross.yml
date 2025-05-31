@@ -92,7 +92,7 @@ jobs:
             tag: 'cross-x64',
             os: 'linux',
             arch: 'x64',
-            docker_repo: '{{env.ghcr_repo}}',
+            docker_repo: '${{env.ghcr_repo}}',
             docker_file: 'pkgs/ci/cross.dockerfile',
             pkg_name: 'cross',
             suffix: '',
