@@ -84,6 +84,10 @@ jobs:
           require_ci 'docker/build'
           require_ci 'docker/manifest'
 
+          %w[tree -L 3]
+          .push('${{env.CARGO_TARGET_DIR}}')
+          .then(&run)
+
           cfg = {
             tag: 'cross-x64',
             os: 'linux',
