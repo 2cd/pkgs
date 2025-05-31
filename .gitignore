@@ -14,16 +14,16 @@ Thumbs.db:encryptable
 
 !/ci
 !/.git*
-# !/src
+!/License
+!/src
+!/docs
 # !/build.rs
 # !/.rustfmt.toml
 # !/rust-toolchain.toml
 # !/.cargo
 # !/Cargo.toml
 # !/Cargo.lock
-# !/License
 # !/assets
-# !/docs
 # !/tests
 # !/examples
 # !/locales
