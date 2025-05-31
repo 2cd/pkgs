@@ -92,6 +92,7 @@ jobs:
             docker_file: 'pkgs/ci/cross.dockerfile',
             pkg_name: 'cross',
             suffix: '',
+            target: 'x86_64-unknown-linux-gnu'
           }
 
           [cfg, cfg.merge({pkg_name: 'cross-utils'})].each do |x|
