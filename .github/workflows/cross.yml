@@ -105,4 +105,4 @@ jobs:
                 .copy_cargo_target_file_to_docker_context_dir
           end
 
-          DockerBuild.new(x).build
+          DockerBuild.new(cfg).build
