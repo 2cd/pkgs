@@ -2,11 +2,11 @@ name: build rs-crate (cross)
 # auto-task.start-build-time = ?
 
 on:
-  # schedule:
-  #   - cron: '30 20 20 */2 *'
+  schedule:
+    - cron: '30 20 20 */2 *'
   push:
     paths:
-      - .github/workflows/cross.yml
+      - .github/workflows/cross-x64.yml
       - ci/cross.dockerfile
 
 env:
