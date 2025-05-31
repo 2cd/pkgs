@@ -10,7 +10,7 @@ on:
       - ci/cross.dockerfile
 
 env:
-  default_ci_shell: ruby glossa/ci/preload.rb {0}
+  default_ci_shell: ruby cinnabar/ci/preload.rb {0}
   RUBYOPT: "--disable=gems"
   cargo_build_profile: thin
   ghcr_repo: 'ghcr.io/2cd/pkgs'
