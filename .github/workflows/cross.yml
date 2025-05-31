@@ -100,7 +100,7 @@ jobs:
             target: '',
           }
 
-          [cfg, cfg.merge({pkg_name: 'cross-utils'})].each do |x|
+          [cfg, cfg.merge({pkg_name: 'cross-util'})].each do |x|
               FileCompressor.new(x)
                 .copy_cargo_target_file_to_docker_context_dir
           end
