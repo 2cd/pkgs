@@ -14,6 +14,7 @@ env:
   RUBYOPT: "--disable=gems"
   cargo_build_profile: thin
   ghcr_repo: 'ghcr.io/2cd/pkgs'
+  cargo_target: 'x86_64-unknown-linux-musl'
 
 jobs:
   build:
@@ -68,7 +69,17 @@ jobs:
       - name: cargo build
         run: |
           pp `cargo -Vv`
-          %w[cargo b --profile ${{env.cargo_build_profile}}]
+          %w[rustup target add ${{env.cargo_target}}].then(&run)
+          apt = %w[sudo apt-get]
+          apt.dup.push('update').then(&run)
+          apt.concat(%w[install -y musl-tools]).then(&run)
+          {
+            cargo: nil,
+            build: nil,
+            profile: ${{env.cargo_build_profile}},
+            target: ${{env.cargo_target}},
+          }
+            .then(&hash_to_args)
             .then(&run)
 
       - uses: actions/checkout@v4
@@ -96,8 +107,7 @@ jobs:
             docker_file: 'pkgs/ci/cross.dockerfile',
             pkg_name: 'cross',
             suffix: '',
-            # target: 'x86_64-unknown-linux-gnu',
-            target: '',
+            target: '${{env.cargo_target}}',
           }
 
           [cfg, cfg.merge({pkg_name: 'cross-util'})].each do |x|
