@@ -79,7 +79,7 @@ jobs:
             profile: '${{env.cargo_build_profile}}',
             target: '${{env.cargo_target}}',
           }
-            .then(&hash_to_args)
+            .then(&hash_to_argv)
             .then(&run)
 
       - uses: actions/checkout@v4
@@ -95,9 +95,9 @@ jobs:
           require_ci 'docker/build'
           require_ci 'docker/manifest'
 
-          %w[tree -L 3]
-          .push('${{env.CARGO_TARGET_DIR}}')
-          .then(&run)
+          %w[tree -L 2]
+            .push('${{env.CARGO_TARGET_DIR}}')
+            .then(&run)
 
           cfg = {
             tag: 'cross-x64',
