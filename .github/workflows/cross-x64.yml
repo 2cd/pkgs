@@ -76,8 +76,8 @@ jobs:
           {
             cargo: nil,
             build: nil,
-            profile: ${{env.cargo_build_profile}},
-            target: ${{env.cargo_target}},
+            profile: '${{env.cargo_build_profile}}',
+            target: '${{env.cargo_target}}',
           }
             .then(&hash_to_args)
             .then(&run)
